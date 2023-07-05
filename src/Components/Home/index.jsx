@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Navigation, Pagination } from 'swiper/modules';
 // eslint-disable-next-line import/no-unresolved
 import { Swiper, SwiperSlide } from 'swiper/react';
+import ProductSection from '../Shared/Product/ProductSection';
 import heroImage from '../../assets/hero-image.png';
 import heroImage2 from '../../assets/hero-image2.png';
 import heroImage3 from '../../assets/hero-image3.png';
@@ -177,6 +178,12 @@ const index = () => (
           <img src={discountImg2} alt="discountImg" />
         </div>
       </div>
+    </div>
+    <div className="product mb-24">
+      <div className="my-7  text-center">
+        <span className="text-xl font-bold border-b-2 border-cyan-300">احدث المنتجات</span>
+      </div>
+      <ProductSection limit={8} />
     </div>
   </main>
 );
