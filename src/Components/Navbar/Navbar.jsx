@@ -45,10 +45,10 @@ function Navbar() {
   );
   const switchToggleMenu = () => !toggleMenu;
   return (
-    <nav className="py-16  flex justify-between container mx-auto px-10 sm:px-20 md:px-0">
+    <nav className="pt-16 pb-5  flex justify-between container mx-auto px-10 sm:px-24 md:px-0 xl:px-24">
       <div className="nav__links flex gap-3 md:gap-14 items-center">
         <h1><Link to="/"><img src={logo} alt="logo" /></Link></h1>
-        <ul className={toggleMenu ? 'md:flex gap-3 xl:gap-6 text-base md:relative md:start-0 fixed -start-56' : 'bg-color-alt gap-6 p-10 flex flex-col fixed top-0 bottom-0 text-white justify-start start-0 z-50'}>
+        <ul style={{ zIndex: '100' }} className={toggleMenu ? 'md:flex gap-3 xl:gap-6 text-base md:relative md:start-0 fixed -start-56' : 'bg-color-alt gap-6 p-10 flex flex-col fixed top-0 bottom-0 text-white justify-start start-0 z-50'}>
           <li><Link className="hover:text-color-main transition-colors" to="/">الرئيسية</Link></li>
           <li><Link className="hover:text-color-main transition-colors" to="/product">المنتجات</Link></li>
           <li><Link className="hover:text-color-main transition-colors" to="services">الخدمات</Link></li>
@@ -84,6 +84,7 @@ function Navbar() {
       <div
         onClick={() => { setToggleMenu(true); }}
         className={toggleMenu ? 'hidden opacity-0' : 'bg-black opacity-80 w-full h-full fixed top-0 start-0'}
+        style={{ zIndex: '99' }}
         role="button"
         tabIndex="-100"
         onKeyUp={switchToggleMenu}
