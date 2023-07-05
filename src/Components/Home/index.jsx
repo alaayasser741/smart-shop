@@ -1,5 +1,5 @@
 /* eslint linebreak-style: ["error", "windows"] */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 // eslint-disable-next-line import/no-unresolved
 import { Navigation, Pagination } from 'swiper/modules';
@@ -70,122 +70,181 @@ const giftIcon = () => (
     </g>
   </svg>
 );
-const index = () => (
-  <main className="home container mx-auto px-10 sm:px-24 md:px-0 xl:px-24">
-    <Swiper
+const index = () => {
+  const [days, setDays] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  useEffect(() => {
+    const startDate = new Date('January 1, 2024 00:00:00');
+    const interval = setInterval(() => {
+      const currentDate = new Date();
+      const timeRemaining = startDate - currentDate;
+
+      if (timeRemaining > 0) {
+        const remainingDays = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        const remainingHours = Math.floor((timeRemaining / (1000 * 60 * 60)) % 24);
+        const remainingMinutes = Math.floor((timeRemaining / (1000 * 60)) % 60);
+        const remainingSeconds = Math.floor((timeRemaining / 1000) % 60);
+
+        setDays(remainingDays);
+        setHours(remainingHours);
+        setMinutes(remainingMinutes);
+        setSeconds(remainingSeconds);
+      } else {
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  return (
+    <main className="home">
+      <div className="slider container mx-auto px-10 sm:px-24 md:px-0 xl:px-24">
+        <Swiper
       // install Swiper modules
-      modules={[Navigation, Pagination]}
-      spaceBetween={50}
-      slidesPerView={1}
-      autoplay
-      navigation
-      pagination={{ clickable: true }}
-      scrollbar={{ draggable: true }}
-      className="mb-24"
-    >
-      <SwiperSlide>
-        <div className="hero flex md:flex-row flex-col-reverse items-center justify-between">
-          <div className="home__info text-center">
-            <span className="sm:text-2xl text-sm">براندات نسائي عالمية</span>
-            <h3 className="sm:text-5xl text-4xl py-3">احدث ادوات الجمال</h3>
-            <p className="sm:text-2xl text-sm mb-8">عالم الجمال</p>
-            <Link to="/product" className="bg-color-main hover:bg-color-alt transition-colors py-3 px-8 rounded-full text-white">اكتشف الان</Link>
-          </div>
-          <div className="home__img">
-            <img src={heroImage} alt="modelImage" />
-          </div>
-        </div>
+          modules={[Navigation, Pagination]}
+          spaceBetween={50}
+          slidesPerView={1}
+          autoplay
+          navigation
+          pagination={{ clickable: true }}
+          scrollbar={{ draggable: true }}
+          className="mb-24"
+        >
+          <SwiperSlide>
+            <div className="hero flex md:flex-row flex-col-reverse items-center justify-between">
+              <div className="home__info text-center">
+                <span className="sm:text-2xl text-sm">براندات نسائي عالمية</span>
+                <h3 className="sm:text-5xl text-4xl py-3">احدث ادوات الجمال</h3>
+                <p className="sm:text-2xl text-sm mb-8">عالم الجمال</p>
+                <Link to="/product" className="bg-color-main hover:bg-color-alt transition-colors py-3 px-8 rounded-full text-white">اكتشف الان</Link>
+              </div>
+              <div className="home__img">
+                <img src={heroImage} alt="modelImage" />
+              </div>
+            </div>
 
-      </SwiperSlide>
-      <SwiperSlide>
-        <div className="hero flex md:flex-row flex-col-reverse items-center justify-between">
-          <div className="home__info text-center">
-            <span className="sm:text-2xl text-sm">براندات الشباب</span>
-            <h3 className="sm:text-5xl text-4xl py-3">احدث البراندات العالمية</h3>
-            <p className="sm:text-2xl text-sm mb-8">عالم الشباب</p>
-            <Link to="/product" className="bg-pink-300 hover:bg-pink-400 transition-colors py-3 px-8 rounded-full text-white">اكتشف الان</Link>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="hero flex md:flex-row flex-col-reverse items-center justify-between">
+              <div className="home__info text-center">
+                <span className="sm:text-2xl text-sm">براندات الشباب</span>
+                <h3 className="sm:text-5xl text-4xl py-3">احدث البراندات العالمية</h3>
+                <p className="sm:text-2xl text-sm mb-8">عالم الشباب</p>
+                <Link to="/product" className="bg-pink-300 hover:bg-pink-400 transition-colors py-3 px-8 rounded-full text-white">اكتشف الان</Link>
+              </div>
+              <div className="home__img">
+                <img src={heroImage2} alt="modelImage" />
+              </div>
+            </div>
+
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="hero flex md:flex-row flex-col-reverse items-center justify-between">
+              <div className="home__info text-center">
+                <span className="sm:text-2xl text-sm">براندات الرياضية</span>
+                <h3 className="sm:text-5xl text-4xl py-3">احدث البراندات الرياضية</h3>
+                <p className="sm:text-2xl text-sm mb-8">عالم الرياضة</p>
+                <Link to="/product" className="bg-yellow-700 hover:bg-yellow-800 transition-colors py-3 px-8 rounded-full text-white">اكتشف الان</Link>
+              </div>
+              <div className="home__img">
+                <img src={heroImage3} alt="modelImage" />
+              </div>
+            </div>
+
+          </SwiperSlide>
+        </Swiper>
+      </div>
+      <div className="services container mx-auto px-10 sm:px-24 md:px-0 xl:px-24">
+        <div className="mb-24 flex gap-4 md:flex-row flex-col justify-between flex-wrap border-b-2 pb-5 border-gray-500-300">
+          <div className="service__box flex gap-2 items-center">
+            <span className="w-14 h-14 flex items-center justify-center border rounded-xl border-gray-300">{vanIcon()}</span>
+            <div className="box__info">
+              <h3 className="text-lg font-medium">توصيل مجاني</h3>
+              <span className="text-gray-400 text-sm">للطلبات اعلي من 200 جنية</span>
+            </div>
           </div>
-          <div className="home__img">
-            <img src={heroImage2} alt="modelImage" />
+
+          <div className="service__box flex gap-2 items-center">
+            <span className="w-14 h-14 flex items-center justify-center border rounded-xl border-gray-300">{mobileIcon()}</span>
+            <div className="box__info">
+              <h3 className="text-lg font-medium">دعم فني</h3>
+              <span className="text-gray-400 text-sm">دعم علي مدار الساعة</span>
+            </div>
+          </div>
+
+          <div className="service__box flex gap-2 items-center">
+            <span className="w-14 h-14 flex items-center justify-center border rounded-xl border-gray-300">{walletIcon()}</span>
+            <div className="box__info">
+              <h3 className="text-lg font-medium">استرجاع الاموال</h3>
+              <span className="text-gray-400 text-sm">استرداد امن لاموالك</span>
+            </div>
+          </div>
+
+          <div className="service__box flex gap-2 items-center">
+            <span className="w-14 h-14 flex items-center justify-center border rounded-xl border-gray-300">{giftIcon()}</span>
+            <div className="box__info">
+              <h3 className="text-lg font-medium">عروض حصرية</h3>
+              <span className="text-gray-400 text-sm">خصومات كبيرة علي منتجاتنا</span>
+            </div>
           </div>
         </div>
-
-      </SwiperSlide>
-      <SwiperSlide>
-        <div className="hero flex md:flex-row flex-col-reverse items-center justify-between">
-          <div className="home__info text-center">
-            <span className="sm:text-2xl text-sm">براندات الرياضية</span>
-            <h3 className="sm:text-5xl text-4xl py-3">احدث البراندات الرياضية</h3>
-            <p className="sm:text-2xl text-sm mb-8">عالم الرياضة</p>
-            <Link to="/product" className="bg-yellow-700 hover:bg-yellow-800 transition-colors py-3 px-8 rounded-full text-white">اكتشف الان</Link>
+      </div>
+      <div className="container mx-auto px-10 sm:px-24 md:px-0 xl:px-24 discount flex-col flex items-center md:items-stretch md:flex-row-reverse justify-between mb-24 gap-4">
+        <div className="discount__box flex flex-row-reverse items-center justify-around px-10">
+          <div className="discount__info">
+            <span className="sm:text-lg font-medium text-sm">خصم كبير</span>
+            <h3 className="sm:text-2xl text-xl font-bold">فساتين بناتي</h3>
+            <Link to="/product" className="sm:text-lg text-sm border-b-2 border-cyan-300 pb-1">تسوق الان</Link>
           </div>
-          <div className="home__img">
-            <img src={heroImage3} alt="modelImage" />
+          <img src={discountImg1} alt="discountImg" />
+        </div>
+        <div className="discount__box discount__box--cyan  flex justify-around flex-row-reverse items-center px-10">
+          <div className="discount__info">
+            <span className="sm:text-lg font-medium text-sm">خصم 50%</span>
+            <h3 className="sm:text-2xl text-xl font-bold">ملابس اطفال</h3>
+            <Link to="/product" className="sm:text-lg text-sm border-b-2 border-cyan-300 pb-1">تسوق الان</Link>
+          </div>
+          <div className="discount__img">
+            <img src={discountImg2} alt="discountImg" />
           </div>
         </div>
-
-      </SwiperSlide>
-    </Swiper>
-    <div className="services mb-24 flex gap-4 md:flex-row flex-col justify-between flex-wrap border-b-2 pb-5 border-gray-500-300">
-      <div className="service__box flex gap-2 items-center">
-        <span className="w-14 h-14 flex items-center justify-center border rounded-xl border-gray-300">{vanIcon()}</span>
-        <div className="box__info">
-          <h3 className="text-lg font-medium">توصيل مجاني</h3>
-          <span className="text-gray-400 text-sm">للطلبات اعلي من 200 جنية</span>
-        </div>
       </div>
-
-      <div className="service__box flex gap-2 items-center">
-        <span className="w-14 h-14 flex items-center justify-center border rounded-xl border-gray-300">{mobileIcon()}</span>
-        <div className="box__info">
-          <h3 className="text-lg font-medium">دعم فني</h3>
-          <span className="text-gray-400 text-sm">دعم علي مدار الساعة</span>
+      <div className="container mx-auto px-10 sm:px-24 md:px-0 xl:px-24 product mb-24">
+        <div className="my-7  text-center">
+          <span className="text-xl font-bold border-b-2 border-cyan-300">احدث المنتجات</span>
         </div>
+        <ProductSection limit={8} />
       </div>
-
-      <div className="service__box flex gap-2 items-center">
-        <span className="w-14 h-14 flex items-center justify-center border rounded-xl border-gray-300">{walletIcon()}</span>
-        <div className="box__info">
-          <h3 className="text-lg font-medium">استرجاع الاموال</h3>
-          <span className="text-gray-400 text-sm">استرداد امن لاموالك</span>
+      <div className="count text-center justify-center items-center flex flex-col gap-6 mb-24 py-10">
+        <span className="lg:text-4xl sm:text-3xl text-2xl  font-medium">اكبر  خصم  علي  الاطلاق</span>
+        <h3 className="text-4xl text-purple-600 font-black lg:text-8xl md:text-6xl">احدث ملابس الاطفال</h3>
+        <div className="counter flex gap-14 flex-wrap justify-center items-center">
+          <div>
+            <span className="block font-extrabold text-2xl lg:text-4xl md:text-3xl">{days}</span>
+            <span className="block font-extrabold text-2xl lg:text-4xl md:text-3xl">يوم</span>
+          </div>
+          <div>
+            <span className="block font-extrabold text-2xl lg:text-4xl md:text-3xl">{hours}</span>
+            <span className="block font-extrabold text-2xl lg:text-4xl md:text-3xl">ساعة</span>
+          </div>
+          <div>
+            <span className="block font-extrabold text-2xl lg:text-4xl md:text-3xl">{minutes}</span>
+            <span className="block font-extrabold text-2xl lg:text-4xl md:text-3xl">دقيقة</span>
+          </div>
+          <div>
+            <span className="block font-extrabold text-2xl lg:text-4xl md:text-3xl text-purple-600">{seconds}</span>
+            <span className="block font-extrabold text-2xl lg:text-4xl md:text-3xl text-purple-600">ثانية </span>
+          </div>
         </div>
+        <Link to="/product" className="bg-purple-600 py-2 hover:bg-purple-700 transition-colors text-white px-5 rounded-full">تسوق الان</Link>
       </div>
-
-      <div className="service__box flex gap-2 items-center">
-        <span className="w-14 h-14 flex items-center justify-center border rounded-xl border-gray-300">{giftIcon()}</span>
-        <div className="box__info">
-          <h3 className="text-lg font-medium">عروض حصرية</h3>
-          <span className="text-gray-400 text-sm">خصومات كبيرة علي منتجاتنا</span>
-        </div>
-      </div>
-    </div>
-    <div className="discount flex-col flex items-center md:items-stretch md:flex-row-reverse justify-between mb-24 gap-4">
-      <div className="discount__box flex flex-row-reverse items-center justify-around px-10">
-        <div className="discount__info">
-          <span className="sm:text-lg font-medium text-sm">خصم كبير</span>
-          <h3 className="sm:text-2xl text-xl font-bold">فساتين بناتي</h3>
-          <Link to="/product" className="sm:text-lg text-sm border-b-2 border-cyan-300 pb-1">تسوق الان</Link>
-        </div>
-        <img src={discountImg1} alt="discountImg" />
-      </div>
-      <div className="discount__box discount__box--cyan  flex justify-around flex-row-reverse items-center px-10">
-        <div className="discount__info">
-          <span className="sm:text-lg font-medium text-sm">خصم 50%</span>
-          <h3 className="sm:text-2xl text-xl font-bold">ملابس اطفال</h3>
-          <Link to="/product" className="sm:text-lg text-sm border-b-2 border-cyan-300 pb-1">تسوق الان</Link>
-        </div>
-        <div className="discount__img">
-          <img src={discountImg2} alt="discountImg" />
-        </div>
-      </div>
-    </div>
-    <div className="product mb-24">
-      <div className="my-7  text-center">
-        <span className="text-xl font-bold border-b-2 border-cyan-300">احدث المنتجات</span>
-      </div>
-      <ProductSection limit={8} />
-    </div>
-  </main>
-);
+    </main>
+  );
+};
 
 export default index;

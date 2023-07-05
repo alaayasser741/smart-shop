@@ -77,32 +77,45 @@
   background-color: var(--main-color);
 }
 
-.discount__box{
+.discount__box {
   max-width: 550px;
   width: 550px;
   background-color: #ffe9ec;
-  img{
+
+  img {
     width: 200px;
   }
 }
-.discount__box--cyan{
+
+.discount__box--cyan {
   background-color: #d6f7fe;
-  img{
+
+  img {
     width: 280px;
   }
 }
+
 @media (width < 570px) {
   .discount__box {
     width: 100%;
     min-height: 170px;
-    img{
+
+    img {
       width: 120px;
     }
   }
-  .discount__box--cyan{
-    
-    img{
+
+  .discount__box--cyan {
+
+    img {
       width: 240px;
     }
   }
+}
+
+.count {
+  min-height: 455px;
+  background: url('../../assets/countBackground.png') no-repeat;
+  background-size: cover;
+  background-position: center;
 }
