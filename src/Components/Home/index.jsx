@@ -243,6 +243,31 @@ const index = () => {
         </div>
         <Link to="/product" className="bg-purple-600 py-2 hover:bg-purple-700 transition-colors text-white px-5 rounded-full">تسوق الان</Link>
       </div>
+      <div className="product-slider container mx-auto px-10 sm:px-24 md:px-0 xl:px-24 product mb-24">
+        <div className="product-slider__container flex justify-between flex-col-reverse sm:flex-row sm:items-start items-center gap-6 w-full">
+          <div className="navigator w-52">
+            <ul className="border border-gray-500 rounded-2xl overflow-hidden">
+              <li className="py-4 px-5 border-b border-gray-400 bg-color-main text-white">تسوق عبر الفئات</li>
+              <li className="py-4 px-5 border-b border-gray-400">
+                <Link to="/product">رجالي</Link>
+              </li>
+              <li className="py-4 px-5 border-b border-gray-400">
+                <Link to="/product">حريمي</Link>
+              </li>
+              <li className="py-4 px-5 border-b border-gray-400">
+                <Link to="/product">اطفال</Link>
+              </li>
+              <li className="py-4 px-5 border-b border-gray-400">
+                <Link to="/product">اكسسوارات</Link>
+              </li>
+              <li className="py-4 px-5">
+                <Link to="/product">العاب</Link>
+              </li>
+            </ul>
+          </div>
+          <ProductSection limit={4} />
+        </div>
+      </div>
     </main>
   );
 };
