@@ -8,6 +8,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import heroImage from '../../assets/hero-image.png';
 import heroImage2 from '../../assets/hero-image2.png';
 import heroImage3 from '../../assets/hero-image3.png';
+import discountImg1 from '../../assets/dress-discount.png';
+import discountImg2 from '../../assets/children-discount.png';
+
 // eslint-disable-next-line import/no-unresolved
 import 'swiper/css';
 // eslint-disable-next-line import/no-unresolved
@@ -152,6 +155,26 @@ const index = () => (
         <div className="box__info">
           <h3 className="text-lg font-medium">عروض حصرية</h3>
           <span className="text-gray-400 text-sm">خصومات كبيرة علي منتجاتنا</span>
+        </div>
+      </div>
+    </div>
+    <div className="discount flex-col flex items-center md:items-stretch md:flex-row-reverse justify-between mb-24 gap-4">
+      <div className="discount__box flex flex-row-reverse items-center justify-around px-10">
+        <div className="discount__info">
+          <span className="sm:text-lg font-medium text-sm">خصم كبير</span>
+          <h3 className="sm:text-2xl text-xl font-bold">فساتين بناتي</h3>
+          <Link to="/product" className="sm:text-lg text-sm border-b-2 border-cyan-300 pb-1">تسوق الان</Link>
+        </div>
+        <img src={discountImg1} alt="discountImg" />
+      </div>
+      <div className="discount__box discount__box--cyan  flex justify-around flex-row-reverse items-center px-10">
+        <div className="discount__info">
+          <span className="sm:text-lg font-medium text-sm">خصم 50%</span>
+          <h3 className="sm:text-2xl text-xl font-bold">ملابس اطفال</h3>
+          <Link to="/product" className="sm:text-lg text-sm border-b-2 border-cyan-300 pb-1">تسوق الان</Link>
+        </div>
+        <div className="discount__img">
+          <img src={discountImg2} alt="discountImg" />
         </div>
       </div>
     </div>

@@ -76,3 +76,33 @@
 .swiper-pagination span {
   background-color: var(--main-color);
 }
+
+.discount__box{
+  max-width: 550px;
+  width: 550px;
+  background-color: #ffe9ec;
+  img{
+    width: 200px;
+  }
+}
+.discount__box--cyan{
+  background-color: #d6f7fe;
+  img{
+    width: 280px;
+  }
+}
+@media (width < 570px) {
+  .discount__box {
+    width: 100%;
+    min-height: 170px;
+    img{
+      width: 120px;
+    }
+  }
+  .discount__box--cyan{
+    
+    img{
+      width: 240px;
+    }
+  }
+}
