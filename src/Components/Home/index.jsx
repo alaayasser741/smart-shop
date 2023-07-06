@@ -6,6 +6,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 // eslint-disable-next-line import/no-unresolved
 import { Swiper, SwiperSlide } from 'swiper/react';
 import ProductSection from '../Shared/Product/ProductSection';
+import ProductSlider from '../Shared/productSlider/ProductSlider';
 import heroImage from '../../assets/hero-image.png';
 import heroImage2 from '../../assets/hero-image2.png';
 import heroImage3 from '../../assets/hero-image3.png';
@@ -75,6 +76,7 @@ const index = () => {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
+  // ? counter
   useEffect(() => {
     const startDate = new Date('January 1, 2024 00:00:00');
     const interval = setInterval(() => {
@@ -100,7 +102,6 @@ const index = () => {
       clearInterval(interval);
     };
   }, []);
-
   return (
     <main className="home">
       <div className="slider container mx-auto px-10 sm:px-24 md:px-0 xl:px-24">
@@ -244,9 +245,9 @@ const index = () => {
         <Link to="/product" className="bg-purple-600 py-2 hover:bg-purple-700 transition-colors text-white px-5 rounded-full">تسوق الان</Link>
       </div>
       <div className="product-slider container mx-auto px-10 sm:px-24 md:px-0 xl:px-24 product mb-24">
-        <div className="product-slider__container flex justify-between flex-col-reverse sm:flex-row sm:items-start items-center gap-6 w-full">
-          <div className="navigator w-52">
-            <ul className="border border-gray-500 rounded-2xl overflow-hidden">
+        <div className="product-slider__container block sm:flex justify-between flex-row items-start gap-6 w-full">
+          <div className="navigator flex justify-center mb-3">
+            <ul className="border w-44 border-gray-500 rounded-2xl overflow-hidden">
               <li className="py-4 px-5 border-b border-gray-400 bg-color-main text-white">تسوق عبر الفئات</li>
               <li className="py-4 px-5 border-b border-gray-400">
                 <Link to="/product">رجالي</Link>
@@ -265,7 +266,7 @@ const index = () => {
               </li>
             </ul>
           </div>
-          <ProductSection limit={4} />
+          <ProductSlider />
         </div>
       </div>
     </main>
