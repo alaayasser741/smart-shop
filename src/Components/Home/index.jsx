@@ -12,6 +12,11 @@ import heroImage2 from '../../assets/hero-image2.png';
 import heroImage3 from '../../assets/hero-image3.png';
 import discountImg1 from '../../assets/dress-discount.png';
 import discountImg2 from '../../assets/children-discount.png';
+import brand1 from '../../assets/brandlogo1.png';
+import brand2 from '../../assets/brandlogo2.png';
+import brand3 from '../../assets/brandlogo3.png';
+import brand4 from '../../assets/brandlogo4.png';
+import brand5 from '../../assets/brandlogo5.png';
 
 // eslint-disable-next-line import/no-unresolved
 import 'swiper/css';
@@ -106,7 +111,7 @@ const index = () => {
     <main className="home">
       <div className="slider container mx-auto px-10 sm:px-24 md:px-0 xl:px-24">
         <Swiper
-      // install Swiper modules
+          // install Swiper modules
           modules={[Navigation, Pagination]}
           spaceBetween={50}
           slidesPerView={1}
@@ -268,6 +273,43 @@ const index = () => {
           </div>
           <ProductSlider />
         </div>
+      </div>
+      <div className="container mx-auto px-10 sm:px-24 md:px-0 xl:px-24 product mb-24">
+        <div className="my-7  text-center">
+          <span className="text-xl font-bold border-b-2 border-cyan-300">البرندات</span>
+        </div>
+        <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          autoplay
+          loop
+          className="brand__slider"
+          breakpoints={{
+            // when window width is >= 640px
+            360: {
+              width: 360,
+              slidesPerView: 3,
+            },
+            // when window width is >= 768px
+            768: {
+              width: 768,
+              slidesPerView: 5,
+            },
+            1080: {
+              width: 1080,
+              slidesPerView: 6,
+            },
+          }}
+        >
+          <SwiperSlide><img src={brand1} alt="brand" /></SwiperSlide>
+          <SwiperSlide><img src={brand2} alt="brand" /></SwiperSlide>
+          <SwiperSlide><img src={brand3} alt="brand" /></SwiperSlide>
+          <SwiperSlide><img src={brand4} alt="brand" /></SwiperSlide>
+          <SwiperSlide><img src={brand1} alt="brand" /></SwiperSlide>
+          <SwiperSlide><img src={brand2} alt="brand" /></SwiperSlide>
+          <SwiperSlide><img src={brand5} alt="brand" /></SwiperSlide>
+          <SwiperSlide><img src={brand3} alt="brand" /></SwiperSlide>
+        </Swiper>
       </div>
     </main>
   );

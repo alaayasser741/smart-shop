@@ -60,29 +60,6 @@ function cartIcon() {
 }
 function ProductSlider() {
   const [data, setData] = useState([]);
-  const [slidesPerView, setSlidesPerView] = useState(3);
-  useEffect(() => {
-    const handleResize = () => {
-      const screenWidth = window.innerWidth;
-      let newSlidesPerView;
-
-      if (screenWidth <= 640) {
-        newSlidesPerView = 1;
-      } else if (screenWidth <= 768) {
-        newSlidesPerView = 1;
-      } else if (screenWidth > 768) {
-        newSlidesPerView = 3;
-      }
-
-      setSlidesPerView(newSlidesPerView);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
   // ! Fetch product data
   useEffect(() => {
     axios.get('http://localhost:3005/product')
@@ -96,10 +73,20 @@ function ProductSlider() {
                 // install Swiper modules
       modules={[Navigation]}
       spaceBetween={50}
-      slidesPerView={slidesPerView}
+      slidesPerView={1}
       autoplay
       navigation
       className="mb-24 swiper__slider"
+      breakpoints={{
+        470: {
+          width: 470,
+          slidesPerView: 2,
+        },
+        768: {
+          width: 768,
+          slidesPerView: 3,
+        },
+      }}
     >
       {data && data.map(({
         id, name, size, stars, priceAfterDiscount, priceBeforeDiscount, img,
