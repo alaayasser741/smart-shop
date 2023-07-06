@@ -7,6 +7,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import ProductSection from '../Shared/Product/ProductSection';
 import ProductSlider from '../Shared/productSlider/ProductSlider';
+import Footer from '../Footer/Footer';
 import heroImage from '../../assets/hero-image.png';
 import heroImage2 from '../../assets/hero-image2.png';
 import heroImage3 from '../../assets/hero-image3.png';
@@ -337,6 +338,7 @@ const index = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </main>
   );
 };
