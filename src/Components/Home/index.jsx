@@ -17,6 +17,9 @@ import brand2 from '../../assets/brandlogo2.png';
 import brand3 from '../../assets/brandlogo3.png';
 import brand4 from '../../assets/brandlogo4.png';
 import brand5 from '../../assets/brandlogo5.png';
+import ads1 from '../../assets/home1.png';
+import ads2 from '../../assets/home2.png';
+import ads3 from '../../assets/home3.png';
 
 // eslint-disable-next-line import/no-unresolved
 import 'swiper/css';
@@ -310,6 +313,29 @@ const index = () => {
           <SwiperSlide><img src={brand5} alt="brand" /></SwiperSlide>
           <SwiperSlide><img src={brand3} alt="brand" /></SwiperSlide>
         </Swiper>
+      </div>
+      <div className="ads grid grid-cols-1 sm:grid-cols-2 justify-items-center md:grid-cols-3 gap-4 container mx-auto px-10 sm:px-24 md:px-0 xl:px-24 product mb-24">
+        <div className="ads__box rounded-lg overflow-hidden">
+          <img src={ads3} alt="ads" />
+          <div className="ads__info text-center my-3">
+            <h3 className="text-xl font-bold mb-2">استمتعي بأجواء مبهره فى الخروجات</h3>
+            <span className="text-sm text-gray-500 font-normal">مع باقه من اجمل الملابس الكاجوال البناتي المودرن</span>
+          </div>
+        </div>
+        <div className="ads__box ads__box--revers flex flex-col-reverse sm:flex-col rounded-lg overflow-hidden">
+          <div className="ads__info text-center my-3">
+            <h3 className="text-xl font-bold mb-2">اشتري اللي يخليك شيك</h3>
+            <span className="text-sm text-gray-500 font-normal">مع احدث واجمل ملابش الشباب الحديثه </span>
+          </div>
+          <img src={ads2} alt="ads" />
+        </div>
+        <div className="ads__box rounded-lg overflow-hidden">
+          <img src={ads1} alt="ads" />
+          <div className="ads__info text-center my-3">
+            <h3 className="text-xl font-bold mb-2">مع اجمل صيحات الموضه والفاشون</h3>
+            <span className="text-sm text-gray-500 font-normal">اطلاله فريده مع افضل تشكيله ملابس شبابي</span>
+          </div>
+        </div>
       </div>
     </main>
   );
