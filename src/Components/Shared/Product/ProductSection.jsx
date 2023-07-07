@@ -86,11 +86,13 @@ function loadingProductBox() {
   );
 }
 
-function ProductSection({ limit, pagination }) {
+function ProductSection({
+  limit, pagination, styleLayout, prodPerPage,
+}) {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const productsPerPage = 8;
+  const productsPerPage = prodPerPage;
   useEffect(() => {
     axios.get('http://localhost:3005/product')
       .then((res) => {
@@ -106,13 +108,19 @@ function ProductSection({ limit, pagination }) {
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const displayedProducts = limit ? data.slice(0, limit)
     : data.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const gridStyles = styleLayout === 'row' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4';
+  const productBoxStyles = styleLayout === 'row' ? 'flex-row flex gap-4 rounded-xl row__style--box' : 'flex-col justify-items-center';
+  const productBoxInfoStyles = styleLayout === 'row' ? 'flex-col items-start gap-2' : 'items-start justify-between';
+  const productBoxPriceStyles = styleLayout === 'row' ? 'flex-row gap-5' : 'flex-col items-end gap-1';
+
   return (
     <div className="product__pagination">
-      <div className="product grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center">
+      <div className={`product grid ${gridStyles} gap-4`}>
         {displayedProducts.length > 0 ? displayedProducts.map(({
           id, name, size, stars, priceAfterDiscount, priceBeforeDiscount, img,
         }) => (
-          <div key={id} className="product__box relative">
+          <div key={id} className={`product__box relative ${productBoxStyles}`}>
             <div className="product__img mb-3">
               <img
                 src={img}
@@ -120,7 +128,7 @@ function ProductSection({ limit, pagination }) {
                 alt="productImg"
               />
             </div>
-            <div className="product__info flex items-start justify-between">
+            <div className={`product__info flex ${productBoxInfoStyles}`}>
               <div className="product__title">
                 <div className="product__stars flex mb-2">
                   {[...Array(stars)].map((_, index) => (
@@ -142,7 +150,7 @@ function ProductSection({ limit, pagination }) {
                   ))}
                 </div>
               </div>
-              <div className="product__price flex flex-col items-end gap-1">
+              <div className={`product__price flex ${productBoxPriceStyles} `}>
                 <span className="text-color-main">
                   {priceAfterDiscount}
                   ج.م
