@@ -58,6 +58,40 @@ function cartIcon() {
     </svg>
   );
 }
+function loadingProductBox() {
+  return (
+    <div className="product__box product__box--loading relative">
+      <div className="product__img mb-3">
+        {/* Placeholder for product image */}
+        <div className="animate-pulse bg-gray-300 h-40 w-full" />
+      </div>
+      <div className="product__info flex items-start justify-between">
+        <div className="product__title">
+          <div className="product__stars flex mb-2">
+            {/* Placeholder for star icons */}
+            <div className="animate-pulse bg-gray-300 h-4 w-12" />
+          </div>
+          {/* Placeholder for product title */}
+          <div className="animate-pulse bg-gray-300 h-6 w-1/2 mb-2" />
+          <div className="product__size flex gap-2">
+            {/* Placeholder for product size options */}
+            <div className="animate-pulse bg-gray-300 h-8 w-8" />
+            <div className="animate-pulse bg-gray-300 h-8 w-8" />
+            <div className="animate-pulse bg-gray-300 h-8 w-8" />
+          </div>
+        </div>
+        <div className="product__price flex flex-col items-end gap-1">
+          {/* Placeholder for product price */}
+          <div className="animate-pulse bg-gray-300 h-6 w-16" />
+          <div className="animate-pulse bg-gray-300 h-6 w-16" />
+        </div>
+      </div>
+      {/* Placeholder for cart icon */}
+      <div className="animate-pulse bg-gray-300 h-8 w-8 rounded-full absolute top-2 start-2" />
+    </div>
+  );
+}
+
 function ProductSlider() {
   const [data, setData] = useState([]);
   // ! Fetch product data
@@ -88,7 +122,7 @@ function ProductSlider() {
         },
       }}
     >
-      {data && data.map(({
+      {data.length > 0 ? data.map(({
         id, name, size, stars, priceAfterDiscount, priceBeforeDiscount, img,
       }) => (
         <SwiperSlide key={id}>
@@ -132,7 +166,14 @@ function ProductSlider() {
             <span className="p-2 border rounded-full hover:bg-color-main transition-all border-gray-400 absolute top-2 start-2 cursor-pointer">{cartIcon()}</span>
           </div>
         </SwiperSlide>
-      ))}
+      )) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {loadingProductBox()}
+          {loadingProductBox()}
+          {loadingProductBox()}
+          {loadingProductBox()}
+        </div>
+      )}
     </Swiper>
   );
 }
