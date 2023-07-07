@@ -4,6 +4,7 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Pagination from './Pagination';
 import './style.scss';
 // http://localhost:3005/product
 function GoldenStarIcon() {
@@ -85,66 +86,92 @@ function loadingProductBox() {
   );
 }
 
-function ProductSection({ limit }) {
+function ProductSection({ limit, pagination }) {
   const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const productsPerPage = 8;
   useEffect(() => {
     axios.get('http://localhost:3005/product')
-      .then((res) => setData(res.data))
+      .then((res) => {
+        setData(res.data);
+        setTotalPages(Math.ceil(res.data.length / productsPerPage));
+      })
       .catch((error) => console.log(error));
   }, []);
-  const displayedProducts = limit ? data.slice(0, limit) : data;
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const displayedProducts = limit ? data.slice(0, limit)
+    : data.slice(indexOfFirstProduct, indexOfLastProduct);
   return (
-    <div className="product grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {displayedProducts.length > 0 ? displayedProducts.map(({
-        id, name, size, stars, priceAfterDiscount, priceBeforeDiscount, img,
-      }) => (
-        <div key={id} className="product__box relative">
-          <div className="product__img mb-3">
-            <img src={img} alt="productImg" />
-          </div>
-          <div className="product__info flex items-start justify-between">
-            <div className="product__title">
-              <div className="product__stars flex mb-2">
-                {[...Array(stars)].map((_, index) => (
-                  <span key={index}>{GoldenStarIcon()}</span>
-                ))}
-                {[...Array(5 - stars)].map((_, index) => (
-                  <span key={index}>{GrayStarIcon()}</span>
-                ))}
+    <div className="product__pagination">
+      <div className="product grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center">
+        {displayedProducts.length > 0 ? displayedProducts.map(({
+          id, name, size, stars, priceAfterDiscount, priceBeforeDiscount, img,
+        }) => (
+          <div key={id} className="product__box relative">
+            <div className="product__img mb-3">
+              <img
+                src={img}
+                loading="lazy"
+                alt="productImg"
+              />
+            </div>
+            <div className="product__info flex items-start justify-between">
+              <div className="product__title">
+                <div className="product__stars flex mb-2">
+                  {[...Array(stars)].map((_, index) => (
+                    <span key={index}>{GoldenStarIcon()}</span>
+                  ))}
+                  {[...Array(5 - stars)].map((_, index) => (
+                    <span key={index}>{GrayStarIcon()}</span>
+                  ))}
+                </div>
+                <h3 className="font-medium mb-2">{name}</h3>
+                <div className="product__size flex gap-2">
+                  {size.map((s, index) => (
+                    <span
+                      key={index}
+                      className="flex justify-center items-center w-8 h-8 border font-medium border-black"
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <h3 className="font-medium mb-2">{name}</h3>
-              <div className="product__size flex gap-2">
-                {size.map((s, index) => (
-                  <span
-                    key={index}
-                    className="flex justify-center items-center w-8 h-8 border font-medium border-black"
-                  >
-                    {s}
-                  </span>
-                ))}
+              <div className="product__price flex flex-col items-end gap-1">
+                <span className="text-color-main">
+                  {priceAfterDiscount}
+                  ج.م
+                </span>
+                <del className="text-color-main">
+                  {priceBeforeDiscount}
+                  ج.م
+                </del>
               </div>
             </div>
-            <div className="product__price flex flex-col items-end gap-1">
-              <span className="text-color-main">
-                {priceAfterDiscount}
-                ج.م
-              </span>
-              <del className="text-color-main">
-                {priceBeforeDiscount}
-                ج.م
-              </del>
-            </div>
+            <span className="p-2 border rounded-full hover:bg-color-main transition-all border-gray-400 absolute top-2 start-2 cursor-pointer">{cartIcon()}</span>
           </div>
-          <span className="p-2 border rounded-full hover:bg-color-main transition-all border-gray-400 absolute top-2 start-2 cursor-pointer">{cartIcon()}</span>
-        </div>
-      )) : (
-        <>
-          {loadingProductBox()}
-          {loadingProductBox()}
-          {loadingProductBox()}
-          {loadingProductBox()}
-        </>
+        )) : (
+          <>
+            {loadingProductBox()}
+            {loadingProductBox()}
+            {loadingProductBox()}
+            {loadingProductBox()}
+          </>
+        )}
+      </div>
+      {pagination && (
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
       )}
+
     </div>
   );
 }

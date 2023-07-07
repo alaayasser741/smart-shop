@@ -1,0 +1,11 @@
+.product__header{
+    min-height: 200px;
+    background: url('../../assets/product-hero.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    img{
+        width: 100%;
+        display: none;
+    }
+}

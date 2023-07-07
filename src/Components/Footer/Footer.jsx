@@ -51,7 +51,7 @@ const whatsappIcon = () => (
 
 function Footer() {
   return (
-    <footer className="bg-color-alt pt-10 pb-4 px-4 flex flex-col items-center gap-4 justify-center">
+    <footer className="bg-color-alt pt-10 pb-4 px-4 flex flex-col items-center gap-4 justify-center mt-24">
       <ul className="md:flex gap-3 xl:gap-6 text-base md:relative md:start-0 fixed -start-56 text-white">
         <li><Link className="hover:text-color-main transition-colors" to="/">الرئيسية</Link></li>
         <li><Link className="hover:text-color-main transition-colors" to="/product">المنتجات</Link></li>
