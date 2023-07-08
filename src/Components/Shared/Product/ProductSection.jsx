@@ -85,14 +85,15 @@ function loadingProductBox() {
     </div>
   );
 }
-
 function ProductSection({
-  limit, pagination, styleLayout, prodPerPage,
+  limit, pagination, styleLayout, prodPerPage, filter, maxValue = 1000, minValue = 0,
 }) {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const productsPerPage = prodPerPage;
+  // Filter state variables
+  const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
     axios.get('http://localhost:3005/product')
       .then((res) => {
@@ -101,22 +102,46 @@ function ProductSection({
       })
       .catch((error) => console.log(error));
   }, []);
+
+  useEffect(() => {
+    const filteredProduct = data.filter((product) => filter
+      .every((value) => product.filter.includes(value)));
+    setFilteredData(filteredProduct);
+  }, [filter]);
+
+  useEffect(() => {
+    const filteredProduct = data
+      .filter((product) => product.priceAfterDiscount >= minValue && product
+        .priceAfterDiscount <= maxValue);
+    setFilteredData(filteredProduct);
+  }, [minValue, maxValue]);
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const displayedProducts = limit ? data.slice(0, limit)
-    : data.slice(indexOfFirstProduct, indexOfLastProduct);
+  // const displayedProducts = limit ? data.slice(0, limit)
+  //   : data.slice(indexOfFirstProduct, indexOfLastProduct);
+  let displayedProducts = [];
+  if (limit && (filter.length > 0 || maxValue < 1000 || minValue > 1)) {
+    displayedProducts = filteredData.slice(0, limit);
+  } else if (limit && !filter.length > 0) {
+    displayedProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
+  } else if (!limit && (filter.length > 0 || maxValue < 1000 || minValue > 1)) {
+    displayedProducts = filteredData.slice(indexOfFirstProduct, indexOfLastProduct);
+  } else if (!limit && !filter.length > 0) {
+    displayedProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
+  }
 
-  const gridStyles = styleLayout === 'row' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4';
-  const productBoxStyles = styleLayout === 'row' ? 'flex-row flex gap-4 rounded-xl row__style--box' : 'flex-col justify-items-center';
+  const gridStyles = styleLayout === 'row' ? 'grid-cols-1 lg:grid-cols-2' : 'grid justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
+  const productBoxStyles = styleLayout === 'row' ? 'flex-row flex gap-4 rounded-xl row__style--box' : 'flex-col';
   const productBoxInfoStyles = styleLayout === 'row' ? 'flex-col items-start gap-2' : 'items-start justify-between';
   const productBoxPriceStyles = styleLayout === 'row' ? 'flex-row gap-5' : 'flex-col items-end gap-1';
 
   return (
     <div className="product__pagination">
-      <div className={`product grid ${gridStyles} gap-4`}>
+      <div className={`product grid ${gridStyles} gap-4 `}>
         {displayedProducts.length > 0 ? displayedProducts.map(({
           id, name, size, stars, priceAfterDiscount, priceBeforeDiscount, img,
         }) => (
@@ -124,7 +149,6 @@ function ProductSection({
             <div className="product__img mb-3">
               <img
                 src={img}
-                loading="lazy"
                 alt="productImg"
               />
             </div>
@@ -173,11 +197,11 @@ function ProductSection({
         )}
       </div>
       {pagination && (
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       )}
 
     </div>

@@ -1,10 +1,9 @@
-.product__box,
-.product__img {
+.product__box {
     max-width: 250px;
-    min-width: 200px;
 }
 
 .product__img {
+    max-width: 200px;
     img {
         width: 100%;
     }
@@ -13,6 +12,6 @@
 .row__style--box {
     min-width: 100px !important;
     .product__img {
-        min-width: 100px !important;
+        min-width: 120px !important;
     }
 }
