@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/no-array-index-key */
 /* eslint linebreak-style: ["error", "windows"] */
 
