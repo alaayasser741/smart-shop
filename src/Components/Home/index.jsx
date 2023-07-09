@@ -227,7 +227,9 @@ const index = () => {
         <div className="my-7  text-center">
           <span className="text-xl font-bold border-b-2 border-cyan-300">احدث المنتجات</span>
         </div>
-        <ProductSection limit={8} />
+        <div className="home__products">
+          <ProductSection limit={8} />
+        </div>
       </div>
       <div className="count text-center justify-center items-center flex flex-col gap-6 mb-24 py-10">
         <span className="lg:text-4xl sm:text-3xl text-2xl  font-medium">اكبر  خصم  علي  الاطلاق</span>

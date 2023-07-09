@@ -104,9 +104,11 @@ function ProductSection({
   }, []);
 
   useEffect(() => {
-    const filteredProduct = data.filter((product) => filter
-      .every((value) => product.filter.includes(value)));
-    setFilteredData(filteredProduct);
+    if (filter && filter.length > 0) {
+      const filteredProduct = data.filter((product) => filter
+        .every((value) => product.filter.includes(value)));
+      setFilteredData(filteredProduct);
+    }
   }, [filter]);
 
   useEffect(() => {
@@ -124,14 +126,16 @@ function ProductSection({
   // const displayedProducts = limit ? data.slice(0, limit)
   //   : data.slice(indexOfFirstProduct, indexOfLastProduct);
   let displayedProducts = [];
-  if (limit && (filter.length > 0 || maxValue < 1000 || minValue > 1)) {
-    displayedProducts = filteredData.slice(0, limit);
-  } else if (limit && !filter.length > 0) {
-    displayedProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
-  } else if (!limit && (filter.length > 0 || maxValue < 1000 || minValue > 1)) {
-    displayedProducts = filteredData.slice(indexOfFirstProduct, indexOfLastProduct);
-  } else if (!limit && !filter.length > 0) {
-    displayedProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
+  if (data && data.length > 0) {
+    if (limit && (filter && (filter.length > 0 || maxValue < 1000 || minValue > 1))) {
+      displayedProducts = filteredData.slice(0, limit);
+    } else if (limit && (!filter || !filter.length > 0)) {
+      displayedProducts = data.slice(0, limit);
+    } else if (!limit && (filter && (filter.length > 0 || maxValue < 1000 || minValue > 1))) {
+      displayedProducts = filteredData.slice(indexOfFirstProduct, indexOfLastProduct);
+    } else if (!limit && (!filter || !filter.length > 0)) {
+      displayedProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
+    }
   }
 
   const gridStyles = styleLayout === 'row' ? 'grid-cols-1 lg:grid-cols-2' : 'grid justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
