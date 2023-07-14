@@ -1,12 +1,16 @@
+/* eslint-disable no-lonely-if */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-console */
 /* eslint-disable react/no-array-index-key */
 /* eslint linebreak-style: ["error", "windows"] */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import Pagination from './Pagination';
 import './style.scss';
-// http://localhost:3005/product
+
 function GoldenStarIcon() {
   return (
     <svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -23,7 +27,6 @@ function GoldenStarIcon() {
     </svg>
   );
 }
-
 function GrayStarIcon() {
   return (
     <svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,7 +54,6 @@ function cartIcon() {
     </svg>
   );
 }
-
 function loadingProductBox() {
   return (
     <div className="product__box relative">
@@ -103,6 +105,9 @@ function ProductSection({
       .catch((error) => console.log(error));
   }, []);
 
+  const getProductId = (id) => {
+    localStorage.setItem('product__id', id);
+  };
   useEffect(() => {
     const filteredProduct = data.filter((product) => filter
       .every((value) => product.filter.includes(value)));
@@ -124,15 +129,33 @@ function ProductSection({
   // const displayedProducts = limit ? data.slice(0, limit)
   //   : data.slice(indexOfFirstProduct, indexOfLastProduct);
   let displayedProducts = [];
-  if (limit && (filter.length > 0 || maxValue < 1000 || minValue > 1)) {
-    displayedProducts = filteredData.slice(0, limit);
-  } else if (limit && !filter.length > 0) {
-    displayedProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
-  } else if (!limit && (filter.length > 0 || maxValue < 1000 || minValue > 1)) {
-    displayedProducts = filteredData.slice(indexOfFirstProduct, indexOfLastProduct);
-  } else if (!limit && !filter.length > 0) {
-    displayedProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
+  if (limit) {
+    if (filter && filter.length > 0) {
+      displayedProducts = filteredData.slice(0, limit);
+    } else {
+      displayedProducts = data.slice(0, limit);
+    }
+  } else {
+    if ((filter && filter.length > 0) || maxValue < 1000 || minValue > 1) {
+      displayedProducts = filteredData.slice(indexOfFirstProduct, indexOfLastProduct);
+    } else {
+      displayedProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
+    }
   }
+  // if (limit && ((filter && filter.length > 0) || maxValue < 1000 || minValue > 1)) {
+  //   displayedProducts = filteredData.slice(0, limit);
+  //   console.log('Limit + filter');
+  // } else if (limit && !(filter && filter.length > 0)) {
+  //   console.log('Limit + no filter');
+  //   displayedProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
+  //   console.log(indexOfFirstProduct, indexOfLastProduct,totalPages)
+  // } else if (!limit && (filter.length > 0 || maxValue < 1000 || minValue > 1)) {
+  //   console.log('no Limit + filter');
+  //   displayedProducts = filteredData.slice(indexOfFirstProduct, indexOfLastProduct);
+  // } else if (!limit && !filter.length > 0) {
+  //   console.log('no Limit + no filter');
+  //   displayedProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
+  // }
 
   const gridStyles = styleLayout === 'row' ? 'grid-cols-1 lg:grid-cols-2' : 'grid justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
   const productBoxStyles = styleLayout === 'row' ? 'flex-row flex gap-4 rounded-xl row__style--box' : 'flex-col';
@@ -162,7 +185,14 @@ function ProductSection({
                     <span key={index}>{GrayStarIcon()}</span>
                   ))}
                 </div>
-                <h3 className="font-medium mb-2">{name}</h3>
+                <h3
+                  className="font-medium mb-2 hover:text-color-main cursor-pointer"
+                  onClick={() => getProductId(id)}
+                >
+                  <Link to={`/product/${id}`}>
+                    {name}
+                  </Link>
+                </h3>
                 <div className="product__size flex gap-2">
                   {size.map((s, index) => (
                     <span
