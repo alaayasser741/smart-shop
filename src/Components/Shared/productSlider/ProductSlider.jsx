@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-console */
 /* eslint-disable react/no-array-index-key */
 /* eslint linebreak-style: ["error", "windows"] */
@@ -93,7 +94,7 @@ function loadingProductBox() {
   );
 }
 
-function ProductSlider() {
+function ProductSlider({ shared, noNavigation }) {
   const [data, setData] = useState([]);
   // ! Fetch product data
   useEffect(() => {
@@ -105,12 +106,12 @@ function ProductSlider() {
 
   return (
     <Swiper
-                // install Swiper modules
+      // install Swiper modules
       modules={[Navigation]}
       spaceBetween={50}
       slidesPerView={1}
       autoplay
-      navigation
+      navigation={!noNavigation}
       className="mb-24 swiper__slider"
       breakpoints={{
         470: {
@@ -129,7 +130,7 @@ function ProductSlider() {
         <SwiperSlide key={id}>
           <div className="product__box relative">
             <div className="product__img mb-3">
-              <img src={img} alt="productImg" />
+              <img src={shared ? `.${img}` : img} alt="productImg" />
             </div>
             <div className="product__info flex items-start justify-between">
               <div className="product__title">
