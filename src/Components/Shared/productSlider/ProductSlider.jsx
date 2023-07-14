@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-console */
 /* eslint-disable react/no-array-index-key */
@@ -7,6 +9,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 // eslint-disable-next-line import/no-unresolved
 import { Navigation } from 'swiper/modules';
+import { Link } from 'react-router-dom';
 // eslint-disable-next-line import/no-unresolved
 import { Swiper, SwiperSlide } from 'swiper/react';
 // eslint-disable-next-line import/no-unresolved
@@ -103,7 +106,9 @@ function ProductSlider({ shared, noNavigation }) {
       .catch((error) => console.log(error));
   }, []);
   // * SVG Icon
-
+  const getProductId = (id) => {
+    localStorage.setItem('product__id', id);
+  };
   return (
     <Swiper
       // install Swiper modules
@@ -142,7 +147,14 @@ function ProductSlider({ shared, noNavigation }) {
                     <span key={index}>{GrayStarIcon()}</span>
                   ))}
                 </div>
-                <h3 className="font-medium mb-2">{name}</h3>
+                <h3
+                  className="font-medium mb-2 hover:text-color-main cursor-pointer"
+                  onClick={() => getProductId(id)}
+                >
+                  <Link to={`/product/${id}`}>
+                    {name}
+                  </Link>
+                </h3>
                 <div className="product__size flex gap-2">
                   {size.map((s, index) => (
                     <span
