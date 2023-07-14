@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -397,59 +399,70 @@ function SingleProduct() {
             <li onClick={() => setToggleProductDetails(2)} className={toggleProductDetails === 2 ? 'toggle--border' : ''}>معلومات اضافية</li>
             <li onClick={() => setToggleProductDetails(3)} className={toggleProductDetails === 3 ? 'toggle--border' : ''}>تقيمات المنتج</li>
           </ul>
-          <div className="product__review flex gap-4 flex-col md:flex-row">
-            <div className="product__comments_container basis-1/2">
-              <span className="text-xl font-medium block mb-2">
-                {productComments && productComments.length}
-                {' '}
-                تقيمات
-              </span>
-              <div className="product__comments">
-                {productComments && productComments.slice().reverse().map(({
-                  id, username, comment, rate, date, title,
-                }) => (
-                  <div key={id} className="comment__box mt-8 flex gap-4 items-start px-2">
-                    <div className="comment__img overflow-hidden">
-                      <img src="https://static.wixstatic.com/media/472d0e_533fa71841b94e619cc309a85904093f~mv2.png/v1/fill/w_640,h_640,fp_0.50_0.50,lg_1,q_90,enc_auto/472d0e_533fa71841b94e619cc309a85904093f~mv2.png" alt="profileImg" />
-                    </div>
-                    <div className="comment__info">
-                      <h3 className="text-xl font-medium mb-2">{title}</h3>
-                      <p className="text-lg text-gray-500 mb-2">{comment}</p>
-                      <div className="product__stars flex mb-2">
-                        {[...Array(rate)].map((_, index) => (
-                          <span key={index}>{GoldenStarIcon()}</span>
-                        ))}
-                        {[...Array(5 - rate)].map((_, index) => (
-                          <span key={index}>{GrayStarIcon()}</span>
-                        ))}
+          {toggleProductDetails === 3 ? (
+            <div className="product__review flex gap-4 flex-col md:flex-row">
+              <div className="product__comments_container basis-1/2">
+                <span className="text-xl font-medium block mb-2">
+                  {productComments && productComments.length}
+                  {' '}
+                  تقيمات
+                </span>
+                <div className="product__comments">
+                  {productComments && productComments.slice().reverse().map(({
+                    id, username, comment, rate, date, title,
+                  }) => (
+                    <div key={id} className="comment__box mt-8 flex gap-4 items-start px-2">
+                      <div className="comment__img overflow-hidden">
+                        <img src="https://static.wixstatic.com/media/472d0e_533fa71841b94e619cc309a85904093f~mv2.png/v1/fill/w_640,h_640,fp_0.50_0.50,lg_1,q_90,enc_auto/472d0e_533fa71841b94e619cc309a85904093f~mv2.png" alt="profileImg" />
                       </div>
-                      <div className="comment__details flex gap-4">
-                        <h4 className="text-sm">{username}</h4>
-                        <span className="text-sm text-gray-500">{date}</span>
+                      <div className="comment__info">
+                        <h3 className="text-xl font-medium mb-2">{title}</h3>
+                        <p className="text-lg text-gray-500 mb-2">{comment}</p>
+                        <div className="product__stars flex mb-2">
+                          {[...Array(rate)].map((_, index) => (
+                            <span key={index}>{GoldenStarIcon()}</span>
+                          ))}
+                          {[...Array(5 - rate)].map((_, index) => (
+                            <span key={index}>{GrayStarIcon()}</span>
+                          ))}
+                        </div>
+                        <div className="comment__details flex gap-4">
+                          <h4 className="text-sm">{username}</h4>
+                          <span className="text-sm text-gray-500">{date}</span>
+                        </div>
                       </div>
                     </div>
+                  ))}
+                </div>
+              </div>
+              <div className="product__add_comment flex flex-col gap-4 basis-1/2">
+                <h3>اضف تقييم</h3>
+                <div className="add_rate">
+                  <Rate count={5} value={rating} onChange={handleRatingChange} />
+                </div>
+                <form onSubmit={addRate} className="flex flex-col gap-4">
+                  <input required className="border rounded-3xl py-2 px-4 w-full focus:outline-none" type="text" value={commentTitle} placeholder="عنوان التقييم" onChange={(e) => setCommentTitle(e.target.value)} />
+                  <textarea required className="resize-none border rounded-3xl py-2 px-4 w-full h-36 focus:outline-none" placeholder="اكتب تقييمك هنا" value={commentDetails} onChange={(e) => setCommentDetails(e.target.value)} />
+                  <div className="user_info flex  justify-between gap-8">
+                    <input required className="border rounded-3xl py-2 px-4 w-full focus:outline-none" type="text" placeholder="اسمك" value={commentUserName} onChange={(e) => setCommentUserName(e.target.value)} />
+                    <input required className="border rounded-3xl py-2 px-4 w-full focus:outline-none" type="email" placeholder="بريدك الالكتروني" value={commentEmail} onChange={(e) => setCommentEmail(e.target.value)} />
                   </div>
-                ))}
+                  <div className="add__comment_btn">
+                    <input type="submit" value="أضف الآن" className="bg-color-main text-white transition-colors hover:bg-color-alt py-2 px-8 rounded-3xl cursor-pointer" />
+                  </div>
+                </form>
               </div>
             </div>
-            <div className="product__add_comment flex flex-col gap-4 basis-1/2">
-              <h3>اضف تقييم</h3>
-              <div className="add_rate">
-                <Rate count={5} value={rating} onChange={handleRatingChange} />
-              </div>
-              <form onSubmit={addRate} className="flex flex-col gap-4">
-                <input required className="border rounded-3xl py-2 px-4 w-full focus:outline-none" type="text" value={commentTitle} placeholder="عنوان التقييم" onChange={(e) => setCommentTitle(e.target.value)} />
-                <textarea required className="resize-none border rounded-3xl py-2 px-4 w-full h-36 focus:outline-none" placeholder="اكتب تقييمك هنا" value={commentDetails} onChange={(e) => setCommentDetails(e.target.value)} />
-                <div className="user_info flex  justify-between gap-8">
-                  <input required className="border rounded-3xl py-2 px-4 w-full focus:outline-none" type="text" placeholder="اسمك" value={commentUserName} onChange={(e) => setCommentUserName(e.target.value)} />
-                  <input required className="border rounded-3xl py-2 px-4 w-full focus:outline-none" type="email" placeholder="بريدك الالكتروني" value={commentEmail} onChange={(e) => setCommentEmail(e.target.value)} />
-                </div>
-                <div className="add__comment_btn">
-                  <input type="submit" value="أضف الآن" className="bg-color-main text-white transition-colors hover:bg-color-alt py-2 px-8 rounded-3xl cursor-pointer" />
-                </div>
-              </form>
-            </div>
-          </div>
+          ) : toggleProductDetails === 2 ? 'لا توجد معلومات اضافية حول هذا المنتج'
+            : (
+              <ul className="flex flex-col gap-4 list-disc">
+                <li>"منتج فريد ومميز يتميز بجودة عالية وتصميم فريد"</li>
+                <li>"منتج عالي الجودة مصنوع من مواد عالية الجودة ومصمم بعناية لتلبية احتياجاتك"</li>
+                <li>"تعرف على منتجنا الجديد الذي يتميز بأسلوب فريد وجودة عالية"</li>
+                <li>"منتج رائع يتميز بأسلوب فريد وأداء عالي الجودة"</li>
+                <li>"منتج مصمم بعناية ومصنوع من مواد عالية الجودة لتلبية احتياجاتك"</li>
+              </ul>
+            )}
         </div>
       </div>
       <div className="container mx-auto px-4 sm:px-10 md:px-12 lg:px-16 xl:px-20 mb-24">
