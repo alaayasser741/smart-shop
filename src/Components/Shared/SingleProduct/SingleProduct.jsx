@@ -104,6 +104,17 @@ function SingleProduct() {
   const [commentUserName, setCommentUserName] = useState('');
   const [commentEmail, setCommentEmail] = useState('');
   const [loading, setLoading] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
+  const accessToken = localStorage.getItem('accessToken');
+
+  const handleClick = () => {
+    setShowAlert(true);
+    const audio = new Audio('../../src/assets/alert.mp3');
+    audio.play();
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 5000);
+  };
 
   const handleRatingChange = (value) => {
     setRating(value);
@@ -147,13 +158,17 @@ function SingleProduct() {
     color: productColor,
   };
   const addToCart = () => {
-    axios.post('http://localhost:3005/cart', ProductCartData)
-      .then((response) => {
-        console.log('New Product added successfully to cart:', response.data);
-      })
-      .catch((error) => {
-        console.error('Error adding Product:', error);
-      });
+    if (accessToken) {
+      axios.post('http://localhost:3005/cart', ProductCartData)
+        .then((response) => {
+          console.log('New Product added successfully to cart:', response.data);
+        })
+        .catch((error) => {
+          console.error('Error adding Product:', error);
+        });
+    } else {
+      handleClick();
+    }
   };
   const now = new Date();
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -194,6 +209,20 @@ function SingleProduct() {
   }
   return (
     <div className="single__product">
+      {/* Alert */}
+      {showAlert && (
+        <div style={{ zIndex: '1000' }} className="fixed top-4 right-1/2 translate-x-1/2 flex gap-2 items-center p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-200 shadow-xl" role="alert">
+          <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <span className="sr-only">Info</span>
+          <div>
+            <span className="font-bold pe-2">تحذير !</span>
+            {' '}
+            يرجي تسجيل الدخول اولًا
+          </div>
+        </div>
+      )}
       <div className="product__header mt-5 mb-10 flex justify-center items-center flex-col gap-4">
         <img src={headerImg} alt="headerImg" className="w-full" />
         <h2 className="text-white md:text-5xl sm:text-3xl text-xl font-extrabold">تسوق احدث المنتجات العصرية</h2>

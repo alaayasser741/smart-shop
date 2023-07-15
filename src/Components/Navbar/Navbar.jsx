@@ -15,8 +15,17 @@ function Navbar() {
   const [toggleCartMenu, setToggleCartMenu] = useState(true);
   const [toggleSearch, setToggleSearch] = useState(true);
   const [toggleUser, setToggleUser] = useState(true);
-
   const [authUser, setAuthUser] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const accessToken = localStorage.getItem('accessToken');
+  const handleClick = () => {
+    setShowAlert(true);
+    const audio = new Audio('../../src/assets/alert.mp3');
+    audio.play();
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 5000);
+  };
   useEffect(() => {
     const listen = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -66,11 +75,31 @@ function Navbar() {
     </svg>
   );
   const switchToggleMenu = () => !toggleMenu;
-  const switchToggleCartMenu = () => !toggleCartMenu;
+  const switchToggleCartMenu = () => {
+    if (accessToken) {
+      setToggleCartMenu(!toggleCartMenu);
+    } else {
+      handleClick();
+    }
+  }
   const switchToggleSearch = () => !toggleSearch;
   const switchToggleUser = () => !toggleUser;
   return (
     <nav className="pt-16 pb-5  flex justify-between container mx-auto px-10 sm:px-24 md:px-0 xl:px-24">
+      {/* Alert */}
+      {showAlert && (
+        <div style={{ zIndex: '1000' }} className="fixed top-4 right-1/2 translate-x-1/2 flex gap-2 items-center p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-200 shadow-xl" role="alert">
+          <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <span className="sr-only">Info</span>
+          <div>
+            <span className="font-bold pe-2">تحذير !</span>
+            {' '}
+            يرجي تسجيل الدخول اولًا
+          </div>
+        </div>
+      )}
       <div className="nav__links flex gap-3 md:gap-14 items-center">
         <h1><Link to="/"><img src={logo} alt="logo" /></Link></h1>
         <ul style={{ zIndex: '100' }} className={toggleMenu ? 'md:flex gap-3 xl:gap-6 text-base md:relative md:start-0 fixed -start-56' : 'bg-color-alt gap-6 p-10 flex flex-col fixed top-0 bottom-0 text-white justify-start start-0 z-50'}>
@@ -119,7 +148,7 @@ function Navbar() {
           {heartIcon()}
         </span>
         <span
-          onClick={() => { setToggleCartMenu(!toggleCartMenu); }}
+          onClick={() => { switchToggleCartMenu(); }}
           role="button"
           tabIndex="0"
           onKeyUp={switchToggleCartMenu}
