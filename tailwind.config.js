@@ -10,6 +10,7 @@ export default {
       colors: {
         'color-main': '#7fd3df',
         'color-alt': '#54a4af',
+        'color-cyan-alt': '#93CADE',
       },
     },
   },

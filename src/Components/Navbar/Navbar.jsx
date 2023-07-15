@@ -2,9 +2,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/Logo.png';
+import CartDropMenu from '../Cart/CartDropMenu';
 
 function Navbar() {
   const [toggleMenu, setToggleMenu] = useState(true);
+  const [toggleCartMenu, setToggleCartMenu] = useState(true);
+  const [toggleSearch, setToggleSearch] = useState(true);
   // ! SVG Icons
   const userIcon = () => (
     <svg className="hover:fill-color-main transition-all cursor-pointer" width="18" height="18" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,6 +47,8 @@ function Navbar() {
     </svg>
   );
   const switchToggleMenu = () => !toggleMenu;
+  const switchToggleCartMenu = () => !toggleCartMenu;
+  const switchToggleSearch = () => !toggleSearch;
   return (
     <nav className="pt-16 pb-5  flex justify-between container mx-auto px-10 sm:px-24 md:px-0 xl:px-24">
       <div className="nav__links flex gap-3 md:gap-14 items-center">
@@ -58,20 +63,36 @@ function Navbar() {
           <li><Link className="hover:text-color-main transition-colors" to="contact">اتصل بنا</Link></li>
         </ul>
       </div>
+
+      {/* Nav Icons */}
       <div className={toggleMenu ? 'nav__profile md:flex gap-3 hidden' : 'fixed z-50 bottom-0 py-10 flex start-10 gap-3'}>
-        <span>
+        <span
+          onClick={() => { setToggleSearch(!toggleSearch); }}
+          role="button"
+          tabIndex="0"
+          onKeyUp={switchToggleSearch}
+        >
           {searchIcon()}
         </span>
         <span>
-          {userIcon()}
+          <Link to="/register">
+            {userIcon()}
+          </Link>
         </span>
         <span>
           {heartIcon()}
         </span>
-        <span>
+        <span
+          onClick={() => { setToggleCartMenu(!toggleCartMenu); }}
+          role="button"
+          tabIndex="0"
+          onKeyUp={switchToggleCartMenu}
+        >
           {cartIcon()}
         </span>
       </div>
+
+      {/* Menu Toggle Icon */}
       <span
         className="md:hidden"
         onClick={() => { setToggleMenu(!toggleMenu); }}
@@ -81,15 +102,39 @@ function Navbar() {
       >
         {menuIcon()}
       </span>
+
+      {/* Overlay */}
       <div
-        onClick={() => { setToggleMenu(true); }}
-        className={toggleMenu ? 'hidden opacity-0' : 'bg-black opacity-80 w-full h-full fixed top-0 start-0'}
+        onClick={() => { setToggleMenu(true); setToggleCartMenu(true); setToggleSearch(true); }}
+        className={`bg-black overflow-hidden opacity-70 w-full h-full fixed top-0 start-0 ${toggleCartMenu && toggleMenu && toggleSearch ? 'hidden opacity-0' : ''}`}
         style={{ zIndex: '99' }}
         role="button"
         tabIndex="-100"
         onKeyUp={switchToggleMenu}
         aria-label="Overlay"
       />
+
+      {/* Cart Menu */}
+      <div style={{ zIndex: '100' }} className={toggleCartMenu ? 'cart__drop_menu hidden' : 'cart__drop_menu relative'}>
+        <div className="dropMenu_container">
+          <CartDropMenu />
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div
+        style={{ zIndex: '100' }}
+        className={toggleSearch ? 'hidden' : 'search absolute w-full h-36 bg-color-cyan-alt top-0 left-0 p-8'}
+      >
+        <div className="search__form w-full sm:w-1/2 mx-auto">
+          <form className="flex flex-col  justify-center items-start gap-2">
+            <span className="font-bold text-xs">عن ماذا تبحث ؟</span>
+            <input className="bg-transparent border-b w-full py-1 px-2 focus:outline-none" placeholder="اكتب كلمة للبحث......" type="search" name="search" id="search" />
+          </form>
+        </div>
+      </div>
+
+      {/* Login */}
     </nav>
   );
 }

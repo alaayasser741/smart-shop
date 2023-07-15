@@ -1,0 +1,26 @@
+.form__container{
+    min-height: 500px;
+}
+@media (width < 641px) {
+    .form__container{
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    .form__img,
+    .form__img--signUp{
+        min-height: 300px;
+        background-position: top !important;
+    }
+}
+.form__img{
+    background-image: url('../../assets/login.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.form__img--signUp{
+    background-image: url('../../assets/signup.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
