@@ -9,6 +9,7 @@ import Footer from './Components/Footer/Footer';
 import SingleProduct from './Components/Shared/SingleProduct/SingleProduct';
 import Cart from './Components/Cart/Cart';
 import Login from './Components/Register/Login';
+import NotFound from './Components/NotFound/NotFound';
 
 function App() {
   return (
@@ -19,7 +20,9 @@ function App() {
         <Route path="/product" element={<Products />} />
         <Route path="/product/:productId" element={<SingleProduct />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/register" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/sign-up" element={<Login type={1} />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </Router>

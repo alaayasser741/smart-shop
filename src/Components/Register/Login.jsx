@@ -1,7 +1,16 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-lone-blocks */
+/* eslint-disable consistent-return */
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../../../firebase';
+
 import './style.scss';
 
 const facebookIcon = () => (
@@ -51,8 +60,73 @@ const whatsappIcon = () => (
   </svg>
 );
 
-function Login() {
-  const [registerToggle, setRegisterToggle] = useState(0);
+function Login({ type = 0 }) {
+  const [registerToggle, setRegisterToggle] = useState(type);
+  const [logEmail, setLogEmail] = useState('');
+  const [logPassword, setLogPassword] = useState('');
+  const [signUsername, setSignUsername] = useState('');
+  const [signEmail, setSignEmail] = useState('');
+  const [signPassword, setSignPassword] = useState('');
+  const [notValid, setNotValid] = useState(0);
+  const navigate = useNavigate('');
+  { /*
+  0 >> valid
+  1 >> username is Invalid (sign up)
+  2 >> password is Invalid (sign up)
+  3 >> email is already exist (sign up)
+  4 >> Incorrect password (Login)
+  5 >> Email not found (Login)
+  */ }
+  const LogInHandle = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, logEmail, logPassword)
+      .then((userCredential) => {
+        localStorage.setItem('accessToken', userCredential.user.accessToken);
+      }).then((_s) => {
+        navigate('/');
+      }).catch((err) => {
+        if (err.code === 'auth/wrong-password') {
+          setNotValid(4);
+          console.log('Incorrect password');
+        } else if (err.code === 'auth/user-not-found') {
+          setNotValid(5);
+          console.log('Email not found');
+        } else {
+          console.log(err);
+        }
+      });
+  };
+  const signUpHandle = (e) => {
+    e.preventDefault();
+    // ! Validation
+    const usernameRegEx = /^[a-zA-Z0-9_-]{2,15}\d$/;
+    const passwordRegEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    if (!usernameRegEx.test(signUsername)) {
+      return setNotValid(1);
+    }
+
+    if (!passwordRegEx.test(signPassword)) {
+      return setNotValid(2);
+    }
+    const user = { email: signEmail, password: signPassword };
+    createUserWithEmailAndPassword(auth, user.email, user.password)
+      .then((userCredential) => {
+        setNotValid(0);
+        localStorage.setItem('accessToken', userCredential.user.accessToken);
+        updateProfile(auth.currentUser, {
+          displayName: signUsername,
+        });
+      }).then((_s) => {
+        navigate('/');
+      }).catch((err) => {
+        if (err.code === 'auth/email-already-in-use') {
+          setNotValid(3);
+        } else {
+          console.log(err);
+        }
+      });
+  };
+
   return (
     <div className="form flex justify-center items-center mt-10 container mx-auto px-4 sm:px-10 md:px-12 lg:px-16 xl:px-20 mb-24">
       <div className="form__container w-full shadow-lg flex flex-col sm:flex-row ">
@@ -75,13 +149,15 @@ function Login() {
         <div className="form__info basis-1/2 flex flex-col justify-center items-center p-10 lg:p-16">
           {registerToggle === 0 ? (
             <div className="form__info_content flex flex-col items-center sm:items-start">
+              {notValid === 4 ? <p className="text-red-400 my-2 font-bold">تأكد من الباسورد مجددًا</p> : null}
+              {notValid === 5 ? <p className="text-red-400 my-2 font-bold">هذا الايميل غير موجود</p> : null}
               <h2 className="text-4xl font-bold mb-12">Smart Shop</h2>
               <h3 className="text-xl font-bold mb-2">تسجيل الدخول</h3>
               <p className="text-gray-400 font-light text-sm mb-10">تسجيل الدخول للمتابعة في موقعنا</p>
-              <form>
+              <form onSubmit={LogInHandle}>
                 {/* Email */}
                 <label className="relative">
-                  <input className="w-full border-b py-2 px-3 focus:outline-none" type="email" placeholder="البريد الالكتروني" />
+                  <input className="w-full border-b py-2 px-3 focus:outline-none" type="email" placeholder="البريد الالكتروني" value={logEmail} onChange={(e) => setLogEmail(e.target.value)} />
                   <span className="absolute left-2 translate-y-1/2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
                       <path d="M22 6.22656C22 5.12656 21.1 4.22656 20 4.22656H4C2.9 4.22656 2 5.12656 2 6.22656V18.2266C2 19.3266 2.9 20.2266 4 20.2266H20C21.1 20.2266 22 19.3266 22 18.2266V6.22656ZM20 6.22656L12 11.2266L4 6.22656H20ZM20 18.2266H4V8.22656L12 13.2266L20 8.22656V18.2266Z" fill="black" fillOpacity="0.2" />
@@ -90,7 +166,7 @@ function Login() {
                 </label>
                 {/* Password */}
                 <label className="relative">
-                  <input className="w-full border-b py-2 px-3 focus:outline-none" type="password" placeholder="كلمة المرور" />
+                  <input className="w-full border-b py-2 px-3 focus:outline-none" type="password" placeholder="كلمة المرور" value={logPassword} onChange={(e) => setLogPassword(e.target.value)} />
                   <span className="absolute left-3 translate-y-1/2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" viewBox="0 0 16 22" fill="none">
                       <path d="M8 16.7266C7.46957 16.7266 6.96086 16.5158 6.58579 16.1408C6.21071 15.7657 6 15.257 6 14.7266C6 13.6166 6.89 12.7266 8 12.7266C8.53043 12.7266 9.03914 12.9373 9.41421 13.3123C9.78929 13.6874 10 14.1961 10 14.7266C10 15.257 9.78929 15.7657 9.41421 16.1408C9.03914 16.5158 8.53043 16.7266 8 16.7266ZM14 19.7266V9.72656H2V19.7266H14ZM14 7.72656C14.5304 7.72656 15.0391 7.93728 15.4142 8.31235C15.7893 8.68742 16 9.19613 16 9.72656V19.7266C16 20.257 15.7893 20.7657 15.4142 21.1408C15.0391 21.5158 14.5304 21.7266 14 21.7266H2C1.46957 21.7266 0.960859 21.5158 0.585786 21.1408C0.210714 20.7657 0 20.257 0 19.7266V9.72656C0 8.61656 0.89 7.72656 2 7.72656H3V5.72656C3 4.40048 3.52678 3.12871 4.46447 2.19103C5.40215 1.25335 6.67392 0.726563 8 0.726562C8.65661 0.726562 9.30679 0.855891 9.91342 1.10716C10.52 1.35844 11.0712 1.72674 11.5355 2.19103C11.9998 2.65532 12.3681 3.20652 12.6194 3.81315C12.8707 4.41977 13 5.06995 13 5.72656V7.72656H14ZM8 2.72656C7.20435 2.72656 6.44129 3.04263 5.87868 3.60524C5.31607 4.16785 5 4.93091 5 5.72656V7.72656H11V5.72656C11 4.93091 10.6839 4.16785 10.1213 3.60524C9.55871 3.04263 8.79565 2.72656 8 2.72656Z" fill="black" fillOpacity="0.2" />
@@ -124,22 +200,24 @@ function Login() {
           )
             : (
               <div className="form__info_content flex flex-col items-center sm:items-start">
+                {notValid === 3 ? <p className="text-red-400 my-2 font-bold">هذا الحساب مسجل بالفعل</p> : null}
                 <h2 className="text-4xl font-bold mb-12">Smart Shop</h2>
                 <h3 className="text-xl font-bold mb-2">انشاء حساب </h3>
                 <p className="text-gray-400 font-light text-sm mb-10">انشئ حساب مجاني و استمتع به</p>
-                <form>
+                <form onSubmit={signUpHandle}>
                   {/* Name */}
                   <label className="relative">
-                    <input className="w-full border-b py-2 px-3 focus:outline-none" type="text" placeholder="الاسم" />
+                    <input className="w-full border-b py-2 px-3 focus:outline-none" type="text" placeholder="اسم المستخدم" value={signUsername} onChange={(e) => setSignUsername(e.target.value)} />
                     <span className="absolute left-3 translate-y-1/2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                        <path opacity="0.5" d="M9 10.8516C12.0037 10.8516 18 12.3591 18 15.3516V18.7266H0V15.3516C0 12.3591 5.99625 10.8516 9 10.8516ZM9 0.726562C10.1935 0.726563 11.3381 1.20067 12.182 2.04458C13.0259 2.8885 13.5 4.03309 13.5 5.22656C13.5 6.42004 13.0259 7.56463 12.182 8.40854C11.3381 9.25246 10.1935 9.72656 9 9.72656C7.80653 9.72656 6.66193 9.25246 5.81802 8.40854C4.97411 7.56463 4.5 6.42004 4.5 5.22656C4.5 4.03309 4.97411 2.8885 5.81802 2.04458C6.66193 1.20067 7.80653 0.726563 9 0.726562ZM9 12.9891C5.65875 12.9891 2.1375 14.6316 2.1375 15.3516V16.5891H15.8625V15.3516C15.8625 14.6316 12.3413 12.9891 9 12.9891ZM9 2.86406C8.37343 2.86406 7.77251 3.11297 7.32946 3.55602C6.88641 3.99908 6.6375 4.59999 6.6375 5.22656C6.6375 5.85314 6.88641 6.45405 7.32946 6.8971C7.77251 7.34016 8.37343 7.58906 9 7.58906C9.62657 7.58906 10.2275 7.34016 10.6705 6.8971C11.1136 6.45405 11.3625 5.85314 11.3625 5.22656C11.3625 4.59999 11.1136 3.99908 10.6705 3.55602C10.2275 3.11297 9.62657 2.86406 9 2.86406Z" fill="black" fill-opacity="0.3" />
+                        <path opacity="0.5" d="M9 10.8516C12.0037 10.8516 18 12.3591 18 15.3516V18.7266H0V15.3516C0 12.3591 5.99625 10.8516 9 10.8516ZM9 0.726562C10.1935 0.726563 11.3381 1.20067 12.182 2.04458C13.0259 2.8885 13.5 4.03309 13.5 5.22656C13.5 6.42004 13.0259 7.56463 12.182 8.40854C11.3381 9.25246 10.1935 9.72656 9 9.72656C7.80653 9.72656 6.66193 9.25246 5.81802 8.40854C4.97411 7.56463 4.5 6.42004 4.5 5.22656C4.5 4.03309 4.97411 2.8885 5.81802 2.04458C6.66193 1.20067 7.80653 0.726563 9 0.726562ZM9 12.9891C5.65875 12.9891 2.1375 14.6316 2.1375 15.3516V16.5891H15.8625V15.3516C15.8625 14.6316 12.3413 12.9891 9 12.9891ZM9 2.86406C8.37343 2.86406 7.77251 3.11297 7.32946 3.55602C6.88641 3.99908 6.6375 4.59999 6.6375 5.22656C6.6375 5.85314 6.88641 6.45405 7.32946 6.8971C7.77251 7.34016 8.37343 7.58906 9 7.58906C9.62657 7.58906 10.2275 7.34016 10.6705 6.8971C11.1136 6.45405 11.3625 5.85314 11.3625 5.22656C11.3625 4.59999 11.1136 3.99908 10.6705 3.55602C10.2275 3.11297 9.62657 2.86406 9 2.86406Z" fill="black" fillOpacity="0.4" />
                       </svg>
                     </span>
                   </label>
+                  {notValid === 1 ? <p className="text-red-400 my-2">يجب ان يحتوي اسم المستخدم علي 3-13 حرف ورقم</p> : null}
                   {/* Email */}
                   <label className="relative">
-                    <input className="w-full border-b py-2 px-3 focus:outline-none" type="email" placeholder="البريد الالكتروني" />
+                    <input className="w-full border-b py-2 px-3 focus:outline-none" type="email" placeholder="البريد الالكتروني" value={signEmail} onChange={(e) => setSignEmail(e.target.value)} />
                     <span className="absolute left-2 translate-y-1/2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
                         <path d="M22 6.22656C22 5.12656 21.1 4.22656 20 4.22656H4C2.9 4.22656 2 5.12656 2 6.22656V18.2266C2 19.3266 2.9 20.2266 4 20.2266H20C21.1 20.2266 22 19.3266 22 18.2266V6.22656ZM20 6.22656L12 11.2266L4 6.22656H20ZM20 18.2266H4V8.22656L12 13.2266L20 8.22656V18.2266Z" fill="black" fillOpacity="0.2" />
@@ -148,13 +226,14 @@ function Login() {
                   </label>
                   {/* Password */}
                   <label className="relative">
-                    <input className="w-full border-b py-2 px-3 focus:outline-none" type="password" placeholder="كلمة المرور" />
+                    <input className="w-full border-b py-2 px-3 focus:outline-none" type="password" placeholder="كلمة المرور" value={signPassword} onChange={(e) => setSignPassword(e.target.value)} />
                     <span className="absolute left-3 translate-y-1/2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" viewBox="0 0 16 22" fill="none">
                         <path d="M8 16.7266C7.46957 16.7266 6.96086 16.5158 6.58579 16.1408C6.21071 15.7657 6 15.257 6 14.7266C6 13.6166 6.89 12.7266 8 12.7266C8.53043 12.7266 9.03914 12.9373 9.41421 13.3123C9.78929 13.6874 10 14.1961 10 14.7266C10 15.257 9.78929 15.7657 9.41421 16.1408C9.03914 16.5158 8.53043 16.7266 8 16.7266ZM14 19.7266V9.72656H2V19.7266H14ZM14 7.72656C14.5304 7.72656 15.0391 7.93728 15.4142 8.31235C15.7893 8.68742 16 9.19613 16 9.72656V19.7266C16 20.257 15.7893 20.7657 15.4142 21.1408C15.0391 21.5158 14.5304 21.7266 14 21.7266H2C1.46957 21.7266 0.960859 21.5158 0.585786 21.1408C0.210714 20.7657 0 20.257 0 19.7266V9.72656C0 8.61656 0.89 7.72656 2 7.72656H3V5.72656C3 4.40048 3.52678 3.12871 4.46447 2.19103C5.40215 1.25335 6.67392 0.726563 8 0.726562C8.65661 0.726562 9.30679 0.855891 9.91342 1.10716C10.52 1.35844 11.0712 1.72674 11.5355 2.19103C11.9998 2.65532 12.3681 3.20652 12.6194 3.81315C12.8707 4.41977 13 5.06995 13 5.72656V7.72656H14ZM8 2.72656C7.20435 2.72656 6.44129 3.04263 5.87868 3.60524C5.31607 4.16785 5 4.93091 5 5.72656V7.72656H11V5.72656C11 4.93091 10.6839 4.16785 10.1213 3.60524C9.55871 3.04263 8.79565 2.72656 8 2.72656Z" fill="black" fillOpacity="0.2" />
                       </svg>
                     </span>
                   </label>
+                  {notValid === 2 ? <p className="text-red-400 my-2">يجب ان يتكون الباسورد من 8 حروف وارقام او اكثر وحرف واحد كبير او اكثر</p> : null}
                   {/* Submit */}
                   <div className="form__btn my-6 flex flex-col lg:flex-row gap-2 justify-between items-center">
                     <input type="submit" value="انشاء حساب" className="bg-color-main py-2 px-4 rounded-lg text-white transition-colors hover:bg-color-alt cursor-pointer" />

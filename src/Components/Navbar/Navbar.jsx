@@ -1,13 +1,32 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable no-unused-vars */
 /* eslint linebreak-style: ["error", "windows"] */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
 import logo from '../../assets/Logo.png';
 import CartDropMenu from '../Cart/CartDropMenu';
+import NavRegister from '../Register/NavRegister';
+import { auth } from '../../../firebase';
 
 function Navbar() {
   const [toggleMenu, setToggleMenu] = useState(true);
   const [toggleCartMenu, setToggleCartMenu] = useState(true);
   const [toggleSearch, setToggleSearch] = useState(true);
+  const [toggleUser, setToggleUser] = useState(true);
+
+  const [authUser, setAuthUser] = useState(null);
+  useEffect(() => {
+    const listen = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthUser(user);
+      } else {
+        setAuthUser(null);
+      }
+    });
+  }, []);
+
   // ! SVG Icons
   const userIcon = () => (
     <svg className="hover:fill-color-main transition-all cursor-pointer" width="18" height="18" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,6 +68,7 @@ function Navbar() {
   const switchToggleMenu = () => !toggleMenu;
   const switchToggleCartMenu = () => !toggleCartMenu;
   const switchToggleSearch = () => !toggleSearch;
+  const switchToggleUser = () => !toggleUser;
   return (
     <nav className="pt-16 pb-5  flex justify-between container mx-auto px-10 sm:px-24 md:px-0 xl:px-24">
       <div className="nav__links flex gap-3 md:gap-14 items-center">
@@ -61,7 +81,15 @@ function Navbar() {
           <li><Link className="hover:text-color-main transition-colors" to="polices">الشروط والاحكام</Link></li>
           <li><Link className="hover:text-color-main transition-colors" to="blog">المدونة</Link></li>
           <li><Link className="hover:text-color-main transition-colors" to="contact">اتصل بنا</Link></li>
+          {/* Nav Icons */}
+          <li className="flex  gap-2 absolute bottom-5 opacity-50 hover:opacity-100 md:hidden">
+            <span>
+              {userIcon()}
+            </span>
+            {authUser ? <span>{authUser.displayName}</span> : <span onClick={() => { setToggleMenu(!toggleMenu); }}><Link to="/login">تسجيل دخول</Link></span>}
+          </li>
         </ul>
+
       </div>
 
       {/* Nav Icons */}
@@ -74,10 +102,18 @@ function Navbar() {
         >
           {searchIcon()}
         </span>
-        <span>
-          <Link to="/register">
-            {userIcon()}
-          </Link>
+        <span
+          role="button"
+          tabIndex="0"
+          onClick={() => setToggleUser(!toggleUser)}
+          className="relative cursor-default"
+          onKeyUp={switchToggleUser}
+        >
+          {userIcon()}
+          {/* Login */}
+          <div style={{ zIndex: '100' }} className={toggleUser ? 'hidden' : 'cursor-default Register__menu min-w-fit absolute border top-7 -left-4 bg-white shadow-lg rounded-lg '}>
+            <NavRegister />
+          </div>
         </span>
         <span>
           {heartIcon()}
@@ -133,8 +169,6 @@ function Navbar() {
           </form>
         </div>
       </div>
-
-      {/* Login */}
     </nav>
   );
 }

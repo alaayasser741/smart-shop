@@ -24,3 +24,14 @@
     background-position: center;
     background-repeat: no-repeat;
 }
+.register__dropMenu{
+    position: relative;
+    &::before{
+        content: '';
+        border: 13px solid;
+        border-color: transparent transparent #f4f4f4 transparent;
+        position: absolute; 
+        top: -25px;
+        left: 12px;
+    }
+}
