@@ -182,7 +182,13 @@ function SingleProduct() {
   };
   const addRate = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3005/comments', ProductReview).then((res) => { console.log(res.data); setLoading(1); }).catch((err) => { console.log(err); });
+    if (accessToken) {
+      axios.post('http://localhost:3005/comments', ProductReview)
+        .then((res) => { console.log(res.data); setLoading(1); })
+        .catch((err) => { console.log(err); });
+    } else {
+      handleClick();
+    }
   };
 
   function handleSizeClick(size) {
