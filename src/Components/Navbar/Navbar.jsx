@@ -81,7 +81,7 @@ function Navbar() {
     } else {
       handleClick();
     }
-  }
+  };
   const switchToggleSearch = () => !toggleSearch;
   const switchToggleUser = () => !toggleUser;
   return (

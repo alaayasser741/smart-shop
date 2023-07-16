@@ -1,0 +1,32 @@
+.notFound{
+    background-image: url('../../assets/backSlice.png');
+    background-repeat: no-repeat;
+    background-position: 110% 20%;
+}
+.notFound__container{
+    min-height: calc(100vh - 100px);
+}
+.notfound__Img{
+    max-width: 500px;
+    img{
+        width: 100%;
+    }
+}
+@media (max-width: 1024px) {
+    .notfound__Img{
+        width: 400px;
+    }
+}
+@media (max-width: 768px){
+    .notFound{
+    background-position: 150% 20%;
+    }
+}
+@media (max-width: 640px){
+    .notFound{
+    background-position: 170% 100%;
+    }
+    .notfound__Img{
+        width: 265px;
+    }
+}
