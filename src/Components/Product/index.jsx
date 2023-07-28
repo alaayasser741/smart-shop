@@ -399,6 +399,9 @@ function index() {
           </div>
         </div>
         <div className="more__product w-full">
+          <div className="my-7  text-center">
+            <span className="text-xl font-bold border-b-2 border-cyan-300">منتجات مشابهة</span>
+          </div>
           <ProductSlider />
         </div>
       </div>

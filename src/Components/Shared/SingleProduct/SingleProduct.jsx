@@ -10,6 +10,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Rate from 'rc-rate';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../../store/CartSlice';
 import ProductSlider from '../productSlider/ProductSlider';
 import 'rc-rate/assets/index.css';
 import headerImg from '../../../assets/product-hero.png';
@@ -106,6 +108,7 @@ function SingleProduct() {
   const [loading, setLoading] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const accessToken = localStorage.getItem('accessToken');
+  const dispatch = useDispatch();
 
   const handleClick = () => {
     setShowAlert(true);
@@ -150,6 +153,7 @@ function SingleProduct() {
       .catch((err) => console.log(err));
   }, [loading]);
   const ProductCartData = {
+    id: productId,
     name: productName,
     price: productPrice,
     QTY: productQTY,
@@ -157,15 +161,9 @@ function SingleProduct() {
     size: productSize,
     color: productColor,
   };
-  const addToCart = () => {
+  const addToCartSlice = () => {
     if (accessToken) {
-      axios.post('http://localhost:3005/cart', ProductCartData)
-        .then((response) => {
-          console.log('New Product added successfully to cart:', response.data);
-        })
-        .catch((error) => {
-          console.error('Error adding Product:', error);
-        });
+      dispatch(addToCart(ProductCartData));
     } else {
       handleClick();
     }
@@ -406,7 +404,7 @@ function SingleProduct() {
                   </button>
                 </div>
               </div>
-              <button onClick={() => addToCart()} type="button" className="bg-color-main hover:bg-color-alt transition-colors px-4 py-2 rounded-xl text-white">اضف للسلة</button>
+              <button onClick={() => addToCartSlice()} type="button" className="bg-color-main hover:bg-color-alt transition-colors px-4 py-2 rounded-xl text-white">اضف للسلة</button>
             </div>
             <div className="product__fav flex items-center gap-4 mb-4">
               <span>{heartIcon()}</span>

@@ -2,33 +2,25 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-console */
 /* eslint linebreak-style: ["error", "windows"] */
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeFromCart, increment, decrement } from '../../store/CartSlice';
 import ProductSlider from '../Shared/productSlider/ProductSlider';
 import headerImg from '../../assets/product-hero.png';
 import './style.scss';
 
 function Cart() {
-  const [productQTY, setProductQTY] = useState(1);
-  const [loading, setLoading] = useState(0);
-  const [cartData, setCartData] = useState([]);
-
-  useEffect(() => {
-    axios.get('http://localhost:3005/cart').then((res) => setCartData(res.data)).catch((err) => console.log(err));
-  }, [loading]);
+  const cartData = useSelector((state) => state.cart.cartData);
+  const dispatch = useDispatch();
   const DeleteProduct = (id) => {
-    axios.delete(`http://localhost:3005/cart/${id}`)
-      .then((res) => { console.log(res.data); setLoading(1); })
-      .catch((err) => console.log(err));
+    dispatch(removeFromCart(id));
   };
-  function incrementQTY() {
-    setProductQTY(productQTY + 1);
+  function incrementQTY(id) {
+    dispatch(increment(id));
   }
-  function decrementQTY() {
-    if (productQTY > 1) {
-      setProductQTY(productQTY - 1);
-    }
+  function decrementQTY(id) {
+    dispatch(decrement(id));
   }
   return (
     <div className="cart">
@@ -86,7 +78,7 @@ function Cart() {
                       <div className="flex w-24 flex-row h-10 rounded-xl overflow-hidden relative bg-transparent">
                         <button
                           type="button"
-                          onClick={() => decrementQTY()}
+                          onClick={() => decrementQTY(id)}
                           className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
                         >
                           <span
@@ -98,7 +90,7 @@ function Cart() {
                         <input type="number" className=" focus:outline-none text-center w-full bg-white border font-semibold text-md hover:text-black focus:text-black  md:text-base cursor-default flex items-center text-gray-700  outline-none" name="custom-input-number" value={QTY} readOnly />
                         <button
                           type="button"
-                          onClick={() => incrementQTY()}
+                          onClick={() => incrementQTY(id)}
                           className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
                         >
                           <span

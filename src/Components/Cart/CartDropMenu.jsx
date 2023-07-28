@@ -1,24 +1,27 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-console */
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  removeFromCart, increment, decrement, calcTotalAmount,
+} from '../../store/CartSlice';
 
 function CartDropMenu() {
-  const [cartData, setCartData] = useState([1]);
-  const [loading, setLoading] = useState(0);
-
-  useEffect(() => {
-    axios.get('http://localhost:3005/cart')
-      .then((res) => setCartData(res.data))
-      .catch((err) => console.log(err));
-  }, [loading]);
+  const cartData = useSelector((state) => state.cart.cartData);
+  const totalPrice = useSelector((state) => state.cart.totalAmount);
+  const dispatch = useDispatch();
+  useEffect(() => { dispatch(calcTotalAmount()); }, [cartData]);
   const DeleteProduct = (id) => {
-    axios.delete(`http://localhost:3005/cart/${id}`)
-      .then((res) => { console.log(res.data); setLoading(1); })
-      .catch((err) => console.log(err));
+    dispatch(removeFromCart(id));
   };
+  function incrementQTY(id) {
+    dispatch(increment(id));
+  }
+  function decrementQTY(id) {
+    dispatch(decrement(id));
+  }
   return (
     <div className="bg-white relative w-80 h-screen shadow-lg">
       <div className="dropMenu_cart pt-8">
@@ -40,6 +43,7 @@ function CartDropMenu() {
                 <div className="flex w-36 flex-row h-10 rounded-xl overflow-hidden relative bg-transparent">
                   <button
                     type="button"
+                    onClick={() => decrementQTY(id)}
                     className=" bg-color-cyan-alt text-gray-600 hover:text-gray-700 h-full w-20  cursor-pointer outline-none"
                   >
                     <span
@@ -51,6 +55,7 @@ function CartDropMenu() {
                   <input type="number" className="border-none focus:outline-none text-center w-full bg-color-cyan-alt border font-semibold text-md md:text-base cursor-default flex items-center  outline-none" name="custom-input-number" value={QTY} readOnly />
                   <button
                     type="button"
+                    onClick={() => incrementQTY(id)}
                     className="bg-color-cyan-alt text-gray-600 hover:text-gray-700 h-full w-20 cursor-pointer"
                   >
                     <span
@@ -75,7 +80,13 @@ function CartDropMenu() {
         ))}
       </div>
       <div className="absolute bottom-0 bg-color-cyan-alt h-20 w-full flex justify-between px-4 items-center">
-        <span className="text-lg font-bold">المجموع : 1500 جنية</span>
+        <span className="text-lg font-bold">
+          المجموع :
+          {' '}
+          {totalPrice}
+          {' '}
+          جنية
+        </span>
         <Link to="/cart" className="bg-white py-1 px-6 font-bold text-lg rounded-lg">الدفع</Link>
       </div>
     </div>
